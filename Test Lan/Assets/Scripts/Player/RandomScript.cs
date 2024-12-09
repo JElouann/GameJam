@@ -3,12 +3,11 @@ using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using TMPro;
 using System.Net;
-using System.Net.Sockets;
+using System.Net.Sockets; 
 
 public class RandomScript : MonoBehaviour
 {
     private PlayerController pc;
-    private bool pcAssigned;
 
     [SerializeField] TextMeshProUGUI ipAddressText;
     [SerializeField] TMP_InputField ip;
@@ -20,7 +19,6 @@ public class RandomScript : MonoBehaviour
     {
         ipAddress = "0.0.0.0";
         SetIpAddress(); // Set the Ip to the above address
-        pcAssigned = false;
         InvokeRepeating("assignPlayerController", 0.1f, 0.1f);
     }
 
@@ -74,44 +72,5 @@ public class RandomScript : MonoBehaviour
         {
             pc = FindObjectOfType<PlayerController>();
         }
-        else if (pc == FindObjectOfType<PlayerController>())
-        {
-            pcAssigned = true;
-            CancelInvoke();
-        }
     }
-
-    // Controls to control character
-    public void Right()
-    {
-        if (pcAssigned)
-        {
-            pc.Movement("Right");
-        }
-    }
-
-    public void Left()
-    {
-        if (pcAssigned)
-        {
-            pc.Movement("Left");
-        }
-    }
-
-    public void Forward()
-    {
-        if (pcAssigned)
-        {
-            pc.Movement("Forward");
-        }
-    }
-
-    public void Back()
-    {
-        if (pcAssigned)
-        {
-            pc.Movement("Back");
-        }
-    }
-
 }

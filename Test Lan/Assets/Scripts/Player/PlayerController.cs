@@ -1,43 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] CharacterController cController;
+    [SerializeField] private float _speed;
+    [SerializeField] private Vector3 _direction;
 
-    private void Start()
+    public void OnMove(InputAction.CallbackContext context)
     {
-        // Accessing Character Controller attached to the player
-        cController = GetComponent<CharacterController>();
+        Debug.Log("sdihfiusd");
+        _direction = new Vector3(context.ReadValue<Vector2>().x, 0 , context.ReadValue<Vector2>().y);
     }
 
     private void Update()
     {
-        // Pc Controls
-        if (Input.GetKeyDown(KeyCode.D)) Movement("Right");
-        if (Input.GetKeyDown(KeyCode.A)) Movement("Left");
-        if (Input.GetKeyDown(KeyCode.W)) Movement("Forward");
-        if (Input.GetKeyDown(KeyCode.S)) Movement("Back");
-    }
-
-    // Player Movements
-    public void Movement(string dir)
-    {
-        switch (dir)
-        {
-            case "Right":
-                cController.Move(Vector3.right);
-                break;
-            case "Left":
-                cController.Move(Vector3.left);
-                break;
-            case "Forward":
-                cController.Move(Vector3.forward);
-                break;
-            case "Back":
-                cController.Move(Vector3.back);
-                break;
-        }
+        transform.Translate(_speed * Time.deltaTime * _direction);
     }
 }
