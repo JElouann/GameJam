@@ -1,26 +1,54 @@
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using Unity.Netcode;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerController : NetworkBehaviour
 {
-    [SerializeField] private float _speed;
-    [SerializeField] private Vector3 _direction;
+    public float speed = 5f;
+    public float jumpForce = 5f;
+    public float gravity = -9.81f;
 
-    public void OnMove(InputAction.CallbackContext context)
+    private CharacterController controller;
+    private Vector3 velocity;
+    private bool isGrounded;
+
+    private void Start()
     {
-        Debug.Log("sdihfiusd");
-        _direction = new Vector3(context.ReadValue<Vector2>().x, 0 , context.ReadValue<Vector2>().y);
-        transform.Translate(_speed * Time.deltaTime * _direction);
-
+        controller = GetComponent<CharacterController>();
     }
 
-    /*private void Update()
+    private void Update()
     {
-        if(!IsOwner)
+        if (!IsOwner) return;
+
+        HandleMovement();
+    }
+
+    private void HandleMovement()
+    {
+        // Vérifier si le joueur est au sol
+        isGrounded = controller.isGrounded;
+
+        if (isGrounded && velocity.y < 0)
         {
-            return;
+            velocity.y = -2f;
         }
-        transform.Translate(_speed * Time.deltaTime * _direction);
-    }*/
+
+        // Obtenir les entrées de mouvement
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+
+        Vector3 move = transform.right * moveX + transform.forward * moveZ;
+        controller.Move(move * speed * Time.deltaTime);
+
+        // Saut
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
+        }
+
+        // Appliquer la gravité
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+    }
 }
