@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Netcode;
 using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
@@ -18,7 +19,7 @@ public class CameraController : MonoBehaviour
             mouseDelta = Vector2.zero;
         }
     }
-    
+
     private void Update()
     {
         RotateView();
