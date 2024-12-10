@@ -5,6 +5,7 @@ using UnityEngine;
 using Unity.Netcode;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
+using Unity.VisualScripting;
 
 public class VivoxPlayer : NetworkBehaviour
 {
@@ -37,7 +38,7 @@ public class VivoxPlayer : NetworkBehaviour
         {
             if ( Time.time > _nextPosUpdate)
             {
-                updatePlayer3DPos();
+                //updatePlayer3DPos();
                 _nextPosUpdate += 0.3f;
             }
         }
@@ -53,6 +54,28 @@ public class VivoxPlayer : NetworkBehaviour
         await VivoxService.Instance.InitializeAsync();
         Debug.Log("Vivox: Initialize successfull");
     }
+
+    public async void LoginToVivoxAsync()
+    {
+        if(IsLocalPlayer)
+        {
+            _clientID = (int)GameObject.Find("NetworkManager").GetComponent<NetworkManager>().LocalClientId;
+
+            LoginOptions options = new LoginOptions();
+            options.DisplayName = "Client" + _clientID;
+            options.EnableTTS = true;
+            await VivoxService.Instance.LoginAsync(options);
+
+            join3DChannelAsync();
+        }
+    }
+
+    public async void join3DChannelAsync()
+    {
+        await VivoxService.Instance.JoinPositionalChannelAsync(_gameChannelName, ChatCapability.AudioOnly, _player3DProperties);
+        IsIn3DChannel = true;
+        Debug.Log("Vivox: Sucessfully joined 3D channel");
+    } 
 
     private void onLoggedIn()
     {
