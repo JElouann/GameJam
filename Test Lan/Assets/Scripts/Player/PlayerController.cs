@@ -20,34 +20,28 @@ public class PlayerController : NetworkBehaviour
     private void Update()
     {
         if (!IsOwner) return;
-
-        HandleMovement();
+        Movement();
     }
 
-    private void HandleMovement()
+    private void Movement()
     {
-        // Vérifier si le joueur est au sol
         isGrounded = controller.isGrounded;
 
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
         }
-
-        // Obtenir les entrées de mouvement
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * moveX + transform.forward * moveZ;
         controller.Move(move * speed * Time.deltaTime);
 
-        // Saut
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2f * gravity);
         }
 
-        // Appliquer la gravité
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
