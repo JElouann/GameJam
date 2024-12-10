@@ -38,12 +38,9 @@ public class VivoxPlayer : NetworkBehaviour
         {
             if ( Time.time > _nextPosUpdate)
             {
-                //updatePlayer3DPos();
+                updatePlayer3DPos();
                 _nextPosUpdate += 0.3f;
             }
-        }
-        {
-            
         }
     }
 
@@ -76,6 +73,15 @@ public class VivoxPlayer : NetworkBehaviour
         IsIn3DChannel = true;
         Debug.Log("Vivox: Sucessfully joined 3D channel");
     } 
+
+    public void updatePlayer3DPos()
+    {
+        VivoxService.Instance.Set3DPosition(_localPlayerHead, _gameChannelName);
+        if(_localPlayerHead.transform.position != _lastPlayerHeadPos)
+        {
+            _lastPlayerHeadPos = _localPlayerHead.transform.position;
+        }
+    }
 
     private void onLoggedIn()
     {
