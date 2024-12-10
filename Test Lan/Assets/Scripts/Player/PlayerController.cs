@@ -2,7 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [SerializeField] private float _speed;
     [SerializeField] private Vector3 _direction;
@@ -11,10 +11,16 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("sdihfiusd");
         _direction = new Vector3(context.ReadValue<Vector2>().x, 0 , context.ReadValue<Vector2>().y);
+        transform.Translate(_speed * Time.deltaTime * _direction);
+
     }
 
-    private void Update()
+    /*private void Update()
     {
+        if(!IsOwner)
+        {
+            return;
+        }
         transform.Translate(_speed * Time.deltaTime * _direction);
-    }
+    }*/
 }
